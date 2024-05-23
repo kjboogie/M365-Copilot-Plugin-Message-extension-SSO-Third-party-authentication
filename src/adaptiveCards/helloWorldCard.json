@@ -1,0 +1,37 @@
+{
+  "type": "AdaptiveCard",
+  "body": [
+    {
+      "type": "TextBlock",
+      "text": "${name}",
+      "wrap": true,
+      "size": "Large"
+    },
+    {
+      "type": "TextBlock",
+      "text": "${description}",
+      "wrap": true,
+      "size": "Medium"
+    },
+    {
+      "type":"TextBlock",
+      "id": "updates",
+      "isVisible": false,
+      "text": "Updates ${updates}",
+      "wrap": true,
+      "size":"small"
+
+  }
+  ],
+  "actions": [
+    {
+      "type": "Action.ToggleVisibility",
+      "title": "Toggle Updates",
+      "targetElements": [
+        "updates" 
+      ]
+    }
+  ],
+  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+  "version": "1.4"
+}

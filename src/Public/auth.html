@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Authentication Start</title>
+  <script src="https://statics.teams.cdn.office.net/sdk/v1.6.0/js/MicrosoftTeams.min.js"></script>
+</head>
+<body>
+  <script type="text/javascript">
+    // This function should be run on the client side within the Microsoft Teams environment
+    function signIn() {
+      // Initialize the Teams SDK
+      microsoftTeams.initialize()
+        // Define the third partyauthorization endpoint
+        const thirdpartyAuthEndpoint = 'Add the third party authorization endpoint here';
+        var state = '25236346262362356236'; //you can set any random big value for uniqueness. Better to generate GUID every time. 
+        localStorage.setItem('state', state);
+        var currentURL = new URL(window.location);
+        var clientId = currentURL.searchParams.get("clientId");
+        // Define the query parameters for the third partyauthorization request
+        let queryParams = {
+          client_id: clientId, // Replace with your actual third partyClient ID
+          state: state, // Replace with your actual state value
+          scope: 'boards:read me:read', // Replace with the scopes you need
+          redirect_uri: window.location.origin + '/auth-end.html' // Ensure this matches the registered redirect URI in third partyapp settings
+        };
+
+        // Build the full authorization URL
+        let authUrl = thirdpartyAuthEndpoint + '?' + toQueryString(queryParams);
+
+        // Define the authentication parameters
+        const authParameters = {
+          url: authUrl,
+          width: 600,
+          height: 400,
+          successCallback: (result) => {
+            console.log("Authentication successful: ", result);
+            //const token = tokenGeneration(result);
+            microsoftTeams.authentication.notifySuccess( result );
+          },
+          failureCallback: (reason) => {
+            console.error("Authentication failed: ", reason);
+            // Handle the failure case
+          },
+        };
+
+        // Initiate the authentication process
+        microsoftTeams.authentication.authenticate(authParameters);
+    
+    }
+
+    // Build query string from map of query parameters
+    function toQueryString(queryParams) {
+      return Object.keys(queryParams)
+        .map(function (key) {
+          return encodeURIComponent(key) + '=' + encodeURIComponent(queryParams[key]);
+        })
+        .join('&');
+    }
+
+    // Call the signIn function when the page loads
+    signIn();
+  </script>
+</body>
+</html>
